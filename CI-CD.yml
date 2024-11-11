@@ -1,0 +1,44 @@
+ ```yaml
+     name: CI/CD Pipeline
+
+     on:
+       push:
+         branches:
+           - main  # Run the pipeline on pushes to the main branch
+       pull_request:
+         branches:
+           - main  # Run the pipeline on PRs to the main branch
+
+     jobs:
+       build:
+         runs-on: ubuntu-latest
+
+         steps:
+           - name: Checkout Code
+             uses: actions/checkout@v2
+
+           - name: Set up Node.js
+             uses: actions/setup-node@v2
+             with:
+               node-version: '14' # Specify Node.js version
+
+           - name: Install Dependencies
+             run: npm install
+
+           - name: Run Tests
+             run: npm test
+
+           - name: Build Project
+             run: npm run build # Customize this based on your project build command
+
+       deploy:
+         needs: build
+         runs-on: ubuntu-latest
+         if: github.ref == 'refs/heads/main' # Deploy only when pushing to main
+
+         steps:
+           - name: Deploy Application
+             run: |
+               echo "Deployment step goes here"
+               # Add deployment commands or actions here, such as uploading to a server or service
+     ```
